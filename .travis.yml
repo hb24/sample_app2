@@ -1,6 +1,22 @@
 language: ruby
 rvm:
-  - 2.2.2
+  - 2.3
   - jruby
   - rbx-2
 
+
+before_install:
+  - gem env version | grep '^\(2\|1.\(8\|9\|[0-9][0-9]\)\)' || gem update --system
+  - gem list -i bundler || gem install bundler
+
+script: bundle exec rake ci
+
+script:
+  - bin/rake db:migrate RAILS_ENV=test
+  - bin/rake
+
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: "1352dd7a-16c2-4c30-8b0e-04708f5fff49"
